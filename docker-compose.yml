@@ -10,5 +10,15 @@ services:
     volumes:
       - models:/home/ollama/.ollama/models
 
+  vector_db:
+    build:
+      dockerfile: ./docker/Dockerfile.qdrant
+    ports:
+      - 6333:6333
+    container_name: gnu_parallel_vector_db
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
 volumes:
   models:
+  qdrant_storage:
