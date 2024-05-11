@@ -7,9 +7,14 @@ mkdir -p /home/ollama/logs
 ollama serve > /home/ollama/logs/server.log & sleep 5
 
 # Pull the model only if it does not exist
-model_path=/home/ollama/.ollama/models/manifests/registry.ollama.ai/library/phi3/3.8b
+phi_model_path=/home/ollama/.ollama/models/manifests/registry.ollama.ai/library/phi3/3.8b
 if [ ! -f "$model_path" ]; then
     ollama pull phi3:3.8b
+fi
+
+nomic_model_path=/home/ollama/.ollama/models/manifests/registry.ollama.ai/library/nomic-embed-text/v1.5
+if [ ! -f "$model_path" ]; then
+    ollama pull nomic-embed-text:v1.5
 fi
 
 tail -f /home/ollama/logs/server.log
