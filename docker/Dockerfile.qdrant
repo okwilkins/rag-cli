@@ -1,0 +1,36 @@
+FROM debian:bookworm AS base
+
+# Create user and group
+RUN groupadd -r qdrant && useradd -r -g qdrant qdrant
+RUN mkdir -p /home/qdrant && chown -R qdrant:qdrant /home/qdrant
+
+
+FROM base AS builder
+
+RUN apt-get update && apt-get install -y curl wget tar jq zip
+
+# Download and extract qdrant
+RUN wget --quiet https://github.com/qdrant/qdrant/releases/download/v1.9.2/qdrant-x86_64-unknown-linux-gnu.tar.gz && \
+    tar -xvf qdrant-x86_64-unknown-linux-gnu.tar.gz && \
+    rm qdrant-x86_64-unknown-linux-gnu.tar.gz && \
+    chown -R qdrant:qdrant qdrant
+
+# Get the latest version of the qdrant static frontend
+RUN \
+    DOWNLOAD_LINK=$(curl --silent "https://api.github.com/repos/qdrant/qdrant-web-ui/releases/latest" | \
+        jq -r '.assets[] | select(.name=="dist-qdrant.zip") | .browser_download_url') && \
+    wget --quiet $DOWNLOAD_LINK -O dist-qdrant.zip && \
+    unzip dist-qdrant.zip 'dist/*' -d /static && \
+    cp -r "/static/dist/"* "/static" && \
+    rm -rf /static/dist
+
+
+FROM base AS qdrant_prod
+
+COPY --from=builder --chown=qdrant:qdrant /qdrant /home/qdrant
+COPY --from=builder --chown=qdrant:qdrant /static /home/qdrant/static
+
+WORKDIR /home/qdrant
+ENV TZ=Etc/UTC RUN_MODE=production
+
+ENTRYPOINT [ "./qdrant" ]
