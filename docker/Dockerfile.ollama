@@ -1,0 +1,52 @@
+FROM debian:bookworm AS base
+
+# Create user and group
+RUN groupadd -r ollama && useradd -r -g ollama ollama
+RUN mkdir -p /home/ollama && chown -R ollama:ollama /home/ollama
+
+
+# Build the Ollama binary using Go
+FROM base AS go_build
+
+# cmake and build-essential are required for the Ollama build
+RUN apt-get update && apt-get install -y git cmake build-essential
+USER ollama
+
+# Copy the go binary from the official golang image
+ENV PATH="/usr/local/go/bin:$PATH"
+COPY --from=golang:1.22-bullseye /usr/local/go/ /usr/local/go/
+
+RUN git clone https://github.com/ollama/ollama/ --branch v0.1.32 --depth 1 /home/ollama/ollama
+
+WORKDIR /home/ollama/ollama
+
+RUN go generate ./... && go build .
+
+
+# Setup Ollama environment
+FROM base AS ollama_env
+
+# Install ca-certificates for pulling models
+RUN apt-get update && apt-get install -y ca-certificates
+
+# Copy the startup script
+# Run this first so that the startup script is cached and run in parallel with the go build
+COPY --chown=ollama:ollama ./src/scripts/ollama_startup.sh /home/ollama/scripts/ollama_startup.sh
+RUN chmod +x /home/ollama/scripts/ollama_startup.sh
+
+ENV OLLAMA_HOST=0.0.0.0
+ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV NVIDIA_VISIBLE_DEVICES=all
+
+USER ollama
+
+# Copy the Ollama binary from the go_build stage
+COPY --from=go_build /home/ollama/ollama/ollama /usr/local/bin/ollama
+# Make directory so named volumes dont create via root
+RUN mkdir -p /home/ollama/.ollama/models
+
+WORKDIR /home/ollama/
+
+EXPOSE 11434
+ENTRYPOINT [ "./scripts/ollama_startup.sh" ] 
