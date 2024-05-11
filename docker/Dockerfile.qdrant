@@ -27,11 +27,16 @@ RUN \
 
 FROM base AS qdrant_prod
 
+RUN apt-get update && apt-get install -y curl
+
 COPY --from=builder --chown=qdrant:qdrant /qdrant /home/qdrant
 COPY --from=builder --chown=qdrant:qdrant /static /home/qdrant/static
+
+COPY ./src/scripts/qdrant_startup.sh /home/qdrant/qdrant_startup.sh
+RUN chmod +x /home/qdrant/qdrant_startup.sh
 
 USER qdrant
 WORKDIR /home/qdrant
 ENV TZ=Etc/UTC RUN_MODE=production
 
-ENTRYPOINT [ "./qdrant" ]
+ENTRYPOINT [ "/home/qdrant/qdrant_startup.sh" ]
