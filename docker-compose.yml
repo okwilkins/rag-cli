@@ -13,7 +13,7 @@ services:
   vector_db:
     build:
       dockerfile: ./docker/Dockerfile.qdrant
-      target: qdrant_env
+      target: qdrant_prod
     ports:
       - 6333:6333
     container_name: gnu_parallel_vector_db
