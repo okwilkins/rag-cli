@@ -1,0 +1,2 @@
+qdrant-client==1.9.*
+ollama==0.1.*
