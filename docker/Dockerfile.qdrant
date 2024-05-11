@@ -30,6 +30,7 @@ FROM base AS qdrant_prod
 COPY --from=builder --chown=qdrant:qdrant /qdrant /home/qdrant
 COPY --from=builder --chown=qdrant:qdrant /static /home/qdrant/static
 
+USER qdrant
 WORKDIR /home/qdrant
 ENV TZ=Etc/UTC RUN_MODE=production
 
