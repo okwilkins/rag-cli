@@ -1,6 +1,5 @@
 name: gnu_parallel
 services:
-  app:
   llm_backend:
     build:
       dockerfile: ./docker/Dockerfile.ollama
