@@ -1,0 +1,15 @@
+name: gnu_parallel
+services:
+  app:
+  llm_backend:
+    build:
+      dockerfile: ./docker/Dockerfile.ollama
+      target: ollama_env
+    container_name: gnu_parallel_ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - models:/home/ollama/.ollama/models
+
+volumes:
+  models:
