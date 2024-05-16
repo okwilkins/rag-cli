@@ -13,7 +13,8 @@ from qdrant_client.models import PointStruct
 def list_of_floats(arg: str) -> list[float]:
     """Parses a list of floats."""
     try:
-        pattern = r"[\[\{\<]((.*?))[\]\}\>]"
+        arg = arg.replace("\n", "")
+        pattern = r"[\[\{\<](.*?)[\]\}\>]"
         match = re.match(pattern, arg)
 
         if match is not None:
