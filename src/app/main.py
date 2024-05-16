@@ -1,8 +1,7 @@
 import argparse
 import logging
 import sys
-
-from qdrant_client import QdrantClient
+import json
 from ollama import Client
 
 
@@ -28,8 +27,14 @@ def cli() -> argparse.Namespace:
     )
 
     embedder_parser.add_argument(
-        "text",
+        "--text",
         help="The text to embed.",
+        type=str,
+    )
+
+    embedder_parser.add_argument(
+        "--file",
+        help="The file with text to embed.",
         type=str,
     )
 
@@ -38,7 +43,7 @@ def cli() -> argparse.Namespace:
 
 def run_embedder(text: str, ollama_url: str):
     """Runs the embedder."""
-    logging.basicConfig(filename="myapp.log", level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
     handler = logging.StreamHandler(sys.stderr)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -51,16 +56,16 @@ def run_embedder(text: str, ollama_url: str):
     client = Client(host=ollama_url)
     logger.info("Connected to Ollama")
 
-    logger.info("Embedding text")
+    logger.info(f"Embedding text")
     embeddings = client.embeddings(
         model="nomic-embed-text:v1.5",
         prompt=text,
     )
+    embeddings["text"] = text
     logger.info("Text embedded")
 
-    print(embeddings["embedding"])
-
-
+    sys.stdout.write(json.dumps(embeddings)
+)
 
 
 def main():
