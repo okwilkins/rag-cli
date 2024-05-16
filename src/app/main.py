@@ -1,9 +1,29 @@
 import argparse
 import logging
+import re
 import sys
 import json
 from typing import Optional
+import uuid
 from ollama import Client
+from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct
+
+
+def list_of_floats(arg: str) -> list[float]:
+    """Parses a list of floats."""
+    try:
+        pattern = r"[\[\{\<]((.*?))[\]\}\>]"
+        match = re.match(pattern, arg)
+
+        if match is not None:
+            arg = match.group(1)
+        else:
+            raise argparse.ArgumentTypeError("List must be a list of floats in the form [0.1, 0.2, ...]")
+
+        return [float(x.strip()) for x in arg.split(",")]
+    except ValueError:
+        raise argparse.ArgumentTypeError("List must be a list of floats in the form [0.1, 0.2, ...]")
 
 
 def cli() -> argparse.Namespace:
@@ -37,6 +57,30 @@ def cli() -> argparse.Namespace:
         "--file",
         help="The file with text to embed.",
         type=str,
+    )
+
+    vector_store_parser = subparsers.add_parser(
+        "vector-store",
+        help="Stores a vector in the vector database.",
+    )
+
+    vector_store_parser.add_argument(
+        "--qdrant-url",
+        help="The URL of the Qdrant server.",
+        type=str,
+    )
+
+    vector_store_parser.add_argument(
+        "--collection-name",
+        help="The name of the collection.",
+        type=str,
+    )
+
+    vector_store_parser.add_argument(
+        "embeddings",
+        help="Embeddings to store. Must be a list of floats in the form [0.1, 0.2, ...]",
+        type=list_of_floats,
+        nargs="+",
     )
 
     return parser.parse_args()
@@ -76,6 +120,36 @@ def run_embedder(ollama_url: str, text: Optional[str] = None, file: Optional[str
 
     sys.stdout.write(json.dumps(embeddings)
 )
+    
+
+def run_vector_store(qdrant_url: str, collection_name: str, embeddings: list[list[float]]):
+    """Store embeddings in the vector store."""
+    logging.basicConfig(level=logging.INFO)
+    handler = logging.StreamHandler(sys.stderr)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(__name__)
+    logger.addHandler(handler)
+
+    logger.info("Connecting to vector database")
+    client = QdrantClient(url=qdrant_url)
+    logger.info("Connected to vector database")
+
+    logger.info(f"Upserting vector")
+    points = []
+
+    for embedding in embeddings:
+        point = PointStruct(
+            id=uuid.uuid4().hex,
+            vector=embedding,
+            # payload=article.as_dict(),
+        )
+        points.append(point)
+
+    client.upsert(collection_name=collection_name, points=points)
+    logger.info("Vector upserted")
 
 
 def main():
@@ -86,6 +160,12 @@ def main():
             text=args.text,
             file=args.file,
             ollama_url=args.ollama_url,
+        )
+    elif args.command in ["vector-store"]:
+        run_vector_store(
+            qdrant_url=args.qdrant_url,
+            collection_name=args.collection_name,
+            embeddings=args.embeddings,
         )
 
 
