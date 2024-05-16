@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import json
+from typing import Optional
 from ollama import Client
 
 
@@ -41,8 +42,11 @@ def cli() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_embedder(text: str, ollama_url: str):
+def run_embedder(ollama_url: str, text: Optional[str] = None, file: Optional[str] = None):
     """Runs the embedder."""
+    if text is None and file is None:
+        raise ValueError("Either text or file must be provided.")
+
     logging.basicConfig(level=logging.INFO)
     handler = logging.StreamHandler(sys.stderr)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -57,11 +61,17 @@ def run_embedder(text: str, ollama_url: str):
     logger.info("Connected to Ollama")
 
     logger.info(f"Embedding text")
+
+    if text is None and file is not None:
+        with open(file, "r") as f:
+            text = f.read()
+
     embeddings = client.embeddings(
         model="nomic-embed-text:v1.5",
         prompt=text,
     )
     embeddings["text"] = text
+        
     logger.info("Text embedded")
 
     sys.stdout.write(json.dumps(embeddings)
@@ -74,6 +84,7 @@ def main():
     if args.command in ["embed"]:
         run_embedder(
             text=args.text,
+            file=args.file,
             ollama_url=args.ollama_url,
         )
 
