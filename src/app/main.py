@@ -48,16 +48,13 @@ def cli() -> argparse.Namespace:
         type=str,
     )
 
+    # Add optional stdin argument
     embedder_parser.add_argument(
-        "--text",
-        help="The text to embed.",
-        type=str,
-    )
-
-    embedder_parser.add_argument(
-        "--file",
-        help="The file with text to embed.",
-        type=str,
+        '--file',
+        nargs='?',
+        type=argparse.FileType('r'),
+        default=sys.stdin,
+        help='Input file to embed (default: stdin)'
     )
 
     vector_store_parser = subparsers.add_parser(
@@ -157,11 +154,17 @@ def main():
     args = cli()
 
     if args.command in ["embed"]:
-        run_embedder(
-            text=args.text,
-            file=args.file,
-            ollama_url=args.ollama_url,
-        )
+        # If the file argument is not provided, read from stdin
+        if args.file == sys.stdin:
+            run_embedder(
+                text=sys.stdin.read(),
+                ollama_url=args.ollama_url,
+            )
+        else:
+            run_embedder(
+                file=args.file,
+                ollama_url=args.ollama_url,
+            )
     elif args.command in ["vector-store"]:
         run_vector_store(
             qdrant_url=args.qdrant_url,
