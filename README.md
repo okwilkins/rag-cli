@@ -5,10 +5,10 @@
 ### Get Wikipedia articles
 
 ```bash
-parallel -j 10 '
+parallel -n0 -j 10 '
 curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
 jq -r ".title, .description, .extract" | \
-tee data/articles/{}.$(cat /proc/sys/kernel/random/uuid).txt 1> /dev/null
+tee data/articles/$(cat /proc/sys/kernel/random/uuid).txt 1> /dev/null
 ' ::: {0..100}
 ```
 
