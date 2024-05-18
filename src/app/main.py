@@ -3,7 +3,7 @@ import logging
 import re
 import sys
 import json
-from typing import Optional, TextIO
+from typing import Any, Optional, TextIO
 import uuid
 from ollama import Client
 from qdrant_client import QdrantClient
@@ -74,6 +74,13 @@ def cli() -> argparse.Namespace:
     )
 
     vector_store_parser.add_argument(
+        "--data",
+        help="The data to store with the vector. Can be any JSON-serializable data.",
+        type=json.loads,
+        default={},
+    )
+
+    vector_store_parser.add_argument(
         "embedding",
         help="File with embedding to store. Must be a list of floats in the form [0.1, 0.2, ...] (default: stdin)",
         type=argparse.FileType('r'),
@@ -118,7 +125,7 @@ def run_embedder(ollama_url: str, text: Optional[str] = None, file: Optional[Tex
     sys.stdout.write(json.dumps(embeddings))
    
 
-def run_vector_store(qdrant_url: str, collection_name: str, embedding: list[float]):
+def run_vector_store(qdrant_url: str, collection_name: str, embedding: list[float], data: dict[str, Any]):
     """Store embeddings in the vector store."""
     logging.basicConfig(level=logging.INFO)
     handler = logging.StreamHandler(sys.stderr)
@@ -137,7 +144,7 @@ def run_vector_store(qdrant_url: str, collection_name: str, embedding: list[floa
     point = PointStruct(
         id=uuid.uuid4().hex,
         vector=embedding,
-        # payload=article.as_dict(),
+        payload=data,
     )
 
     client.upsert(collection_name=collection_name, points=[point])
@@ -156,7 +163,13 @@ def main():
     elif args.command in ["vector-store"]:
         embedding_input = args.embedding.read().strip()
         embedding = list_of_floats(embedding_input)
-        run_vector_store(qdrant_url=args.qdrant_url, collection_name=args.collection_name, embedding=embedding)
+
+        run_vector_store(
+            qdrant_url=args.qdrant_url,
+            collection_name=args.collection_name,
+            embedding=embedding,
+            data=args.data,
+        )
 
 
 if __name__ == "__main__":
