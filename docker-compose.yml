@@ -1,5 +1,10 @@
-name: gnu_parallel
+name: rag_cli
 services:
+  app:
+    build:
+      dockerfile: ./docker/Dockerfile.app
+    container_name: app
+
   llm_backend:
     build:
       dockerfile: ./docker/Dockerfile.ollama
