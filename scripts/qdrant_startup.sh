@@ -14,7 +14,7 @@ curl -s -X PUT 'http://localhost:6333/collections/nomic-embed-text-v1.5' \
   --data-raw '{
     "vectors": {
       "size": 768,
-      "distance": "Dot"
+      "distance": "Cosine"
     }
   }'
 
