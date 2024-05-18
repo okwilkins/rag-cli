@@ -12,11 +12,7 @@
     <a href="https://github.com/okwilkins/rag-cli/raw/main/LICENSE"><img src="https://img.shields.io/badge/License-GNU%20GPL-success" alt="GNU GPL"></a>
 </p>
 
-
-
-# Python RAG CLI
-
-A project to demonstrate good practices of building a CLI tool in Python for RAG systems for LLMs.
+# RAG CLI
 
 ## Installation
 
