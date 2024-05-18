@@ -5,11 +5,13 @@ on:
     paths:
       - 'src/rag_cli/**'
       - 'pyproject.toml'
+      - 'poetry.lock'
       - '.github/workflows/python-build.yml'
   pull_request:
     paths:
       - 'src/rag_cli/**'
       - 'pyproject.toml'
+      - 'poetry.lock'
       - '.github/workflows/python-build.yml'
   workflow_dispatch:
 
