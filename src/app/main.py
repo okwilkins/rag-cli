@@ -24,6 +24,14 @@ def list_of_floats(arg: str) -> list[float]:
         return [float(x.strip()) for x in arg.split(",")]
     except ValueError:
         raise argparse.ArgumentTypeError("List must be a list of floats in the form [0.1, 0.2, ...]")
+    
+
+def json_dict(arg: str) -> dict[str, Any]:
+    """Parses a JSON dictionary."""
+    try:
+        return json.loads(arg.replace("\n", "").strip())
+    except json.JSONDecodeError:
+        raise argparse.ArgumentTypeError("Data must be a valid JSON object")
 
 
 def cli() -> argparse.Namespace:
@@ -76,7 +84,7 @@ def cli() -> argparse.Namespace:
     vector_store_parser.add_argument(
         "--data",
         help="The data to store with the vector. Can be any JSON-serializable data.",
-        type=json.loads,
+        type=json_dict,
         default={},
     )
 
