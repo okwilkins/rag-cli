@@ -32,6 +32,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip poetry
-          poetry install --with dev
+          poetry install
       - name: Check with Ruff
-        run: ruff check --config pyproject.toml
+        run: poetry run ruff check --config pyproject.toml
