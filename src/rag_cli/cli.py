@@ -1,7 +1,7 @@
 import argparse
+import json
 import re
 import sys
-import json
 from typing import Any
 
 

@@ -1,7 +1,8 @@
 import logging
 import sys
-from typing import Any
 import uuid
+from typing import Any
+
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct
 

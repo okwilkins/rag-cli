@@ -1,7 +1,8 @@
+import json
 import logging
 import sys
-import json
 from typing import Optional, TextIO
+
 from ollama import Client
 
 
