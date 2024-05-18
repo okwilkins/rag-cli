@@ -1,8 +1,38 @@
+<p align="center">
+  <img height="100" src="https://github.com/okwilkins/rag-cli/raw/main/docs/logo.png" alt="RAG CLI">
+</p>
+
+<p align="center">
+    <b>A project to demonstrate good practices for building CLI tools in Python for RAG systems for LLMs.</b>
+</p>
+
+<p align=center>
+    <a href="https://pypi.org/project/rag-cli/"><img src="https://img.shields.io/pypi/pyversions/rag-cli" alt="Python version"></a>
+    <a href="https://pypi.org/project/rag-cli/"><img src="https://img.shields.io/pypi/v/rag-cli" alt="PyPI version"></a>
+    <a href="https://github.com/okwilkins/rag-cli/raw/main/LICENSE"><img src="https://img.shields.io/badge/License-GNU%20GPL-success" alt="GNU GPL"></a>
+</p>
+
+
+
 # Python RAG CLI
 
+A project to demonstrate good practices of building a CLI tool in Python for RAG systems for LLMs.
 
+## Installation
+
+```bash
+pip install rag-cli
+```
 
 ## Commands
+
+```bash
+sudo apt-get update && sudo apt-get install parallel jq curl
+```
+
+```bash
+mkdir -p data/articles data/embeddings
+```
 
 ### Get Wikipedia articles
 
@@ -11,7 +41,7 @@ parallel -n0 -j 10 '
 curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
 jq -r ".title, .description, .extract" | \
 tee data/articles/$(cat /proc/sys/kernel/random/uuid).txt 1> /dev/null
-' ::: {0..100}
+' ::: {0..10}
 ```
 
 ### Run embeder
