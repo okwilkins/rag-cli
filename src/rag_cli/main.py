@@ -5,7 +5,7 @@ from rag_cli.embedder import run_embedder
 from rag_cli.vector_store import run_vector_store
 
 
-def main():
+def main() -> None:
     args = cli()
 
     if args.command in ["embed"]:
