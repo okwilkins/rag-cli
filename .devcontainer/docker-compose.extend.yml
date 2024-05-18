@@ -3,8 +3,6 @@ services:
     image: python:3.12
     volumes:
       - .:/home/coolguy/python_gnu_parallel
-      - models:/home/coolguy/python_gnu_parallel/models
-      - qdrant_storage:/home/coolguy/python_gnu_parallel/qdrant_storage
     
     # [Optional] Required for ptrac-based debuggers like C++, Go and Rust
     cap_add:
