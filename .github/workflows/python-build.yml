@@ -1,0 +1,37 @@
+name: Python build and test
+
+on:
+  push:
+    paths:
+      - 'src/rag_cli/**'
+      - 'pyproject.toml'
+      - '.github/workflows/python-build.yml'
+  pull_request:
+    paths:
+      - 'src/rag_cli/**'
+      - 'pyproject.toml'
+      - '.github/workflows/python-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    name: Python ${{ matrix.python-version }} test
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip poetry
+          poetry install
+      - name: Check with Ruff
+        run: ruff check --config pyproject.toml
