@@ -1,8 +1,7 @@
-import argparse
-import re
 import sys
-import json
-from typing import Any
+from app.embedder import run_embedder
+from app.vector_store import run_vector_store
+from cli import cli, list_of_floats
 
 
 def main():
