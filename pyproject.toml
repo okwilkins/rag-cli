@@ -8,7 +8,7 @@ keywords = ["CLI", "RAG", "LLM", "vector database", "ollama"]
 authors = ["Oliver Kenyon Wilkins <okwilkins@googlemail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.8,<4.0"
 qdrant-client = ">=1.9.0"
 ollama = ">=0.1.0"
 
