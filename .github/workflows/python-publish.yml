@@ -12,6 +12,8 @@ jobs:
     environment:
       name: pypi
       url: https://pypi.org/project/rag-cli/
+    permissions:
+      id-token: write
 
     steps:
     - uses: actions/checkout@v2
