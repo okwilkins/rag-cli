@@ -24,7 +24,7 @@ def run_embedder(ollama_url: str, text: Optional[str] = None, file: Optional[Tex
     client = Client(host=ollama_url)
     logger.info("Connected to Ollama")
 
-    logger.info(f"Embedding text")
+    logger.info("Embedding text")
 
     if text is None and file is not None:
         text = file.read().strip()
