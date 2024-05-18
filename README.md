@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <b>A project to demonstrate good practices for building CLI tools in Python for RAG systems for LLMs.</b>
+    <b>A project to show good CLI practices with a fully fledged RAG system.</b>
 </p>
 
 <p align=center>
