@@ -102,7 +102,7 @@ Here is an example of an end-to-end pipeline. It takes the following steps:
 bash scripts/run_pipeline.sh
 ```
 
-### Parallel Pipeline
+#### Parallel Pipeline
 
 The script `scripts/run_pipeline.sh` can be run in parallel with [GNU Parallel](https://www.gnu.org/software/parallel/) to speed up the process.
 
@@ -120,17 +120,19 @@ sudo apt-get update && sudo apt-get install parallel jq curl
 mkdir -p data/articles data/embeddings
 ```
 
+## Examples
+
 ### Get Wikipedia articles
 
 ```bash
 parallel -n0 -j 10 '
 curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
 jq -r ".title, .description, .extract" | \
-tee data/articles/$(cat /proc/sys/kernel/random/uuid).txt 1> /dev/null
+tee data/articles/$(cat /proc/sys/kernel/random/uuid).txt
 ' ::: {0..10}
 ```
 
-### Run embeder
+### Run Embedder
 
 ```bash
 parallel '
@@ -151,7 +153,7 @@ parallel rag-cli vector-store --qdrant-url http://localhost:6333 --collection-na
 ```bash
 curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
 jq -r ".title, .description, .extract" | \
-rag-cli embed --ollama-url http://localhost:11434 2>> output.log | \
+rag-cli embed --ollama-url http://localhost:11434 | \
 jq ".embedding" | \
-rag-cli vector-store --qdrant-url http://localhost:6333 --collection-name nomic-embed-text-v1.5 2>> output.log
+rag-cli vector-store --qdrant-url http://localhost:6333 --collection-name nomic-embed-text-v1.5
 ```
