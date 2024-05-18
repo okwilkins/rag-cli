@@ -98,6 +98,20 @@ Here is an example of an end-to-end pipeline. It takes the following steps:
 - Embed the article
 - Store the embedding in Qdrant
 
+Before running the pipeline make sure you have the following installed:
+
+```bash
+sudo apt-get update && sudo apt-get install parallel jq curl
+```
+
+Also make sure that the `data/articles` and `data/embeddings` directories exist:
+
+```bash
+mkdir -p data/articles data/embeddings
+```
+
+Then run the pipeline:
+
 ```bash
 bash scripts/run_pipeline.sh
 ```
@@ -110,19 +124,9 @@ The script `scripts/run_pipeline.sh` can be run in parallel with [GNU Parallel](
 parallel -j 5 -n0 bash scripts/run_pipeline.sh ::: {0..10}
 ```
 
-### Commands
-
-```bash
-sudo apt-get update && sudo apt-get install parallel jq curl
-```
-
-```bash
-mkdir -p data/articles data/embeddings
-```
-
 ## Examples
 
-### Get Wikipedia articles
+### Get 10 Random Wikipedia Articles
 
 ```bash
 parallel -n0 -j 10 '
@@ -132,7 +136,7 @@ tee data/articles/$(cat /proc/sys/kernel/random/uuid).txt
 ' ::: {0..10}
 ```
 
-### Run Embedder
+### Run Embedder On All Articles
 
 ```bash
 parallel '
@@ -142,13 +146,13 @@ tee data/embeddings/$(basename {1} .txt) 1> /dev/null
 ' ::: $(find data/articles/*.txt)
 ```
 
-### Vector store
+### Store All Embeddings In Qdrant
 
 ```bash
 parallel rag-cli vector-store --qdrant-url http://localhost:6333 --collection-name nomic-embed-text-v1.5 2>> output.log ::: $(find data/embeddings/*)
 ```
 
-### Complete pipeline for single article
+### End-to-end Pipeline For A Single Article
 
 ```bash
 curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
