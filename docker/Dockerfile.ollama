@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y ca-certificates
 
 # Copy the startup script
 # Run this first so that the startup script is cached and run in parallel with the previous steps
-COPY --chown=ollama:ollama ./src/scripts/ollama_startup.sh /home/ollama/scripts/ollama_startup.sh
+COPY --chown=ollama:ollama ./scripts/ollama_startup.sh /home/ollama/scripts/ollama_startup.sh
 RUN chmod +x /home/ollama/scripts/ollama_startup.sh
 
 ENV OLLAMA_HOST=0.0.0.0
