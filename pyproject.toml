@@ -44,4 +44,4 @@ dependencies = [
 
 
 [project.scripts]
-sample = "rag_cli.main"
+rag-cli = "rag_cli.main:main"
