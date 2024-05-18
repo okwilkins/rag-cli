@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/go
 {
-    "name": "GNU Parallel",
+    "name": "RAG CLI",
     // The order of the files is important since later files override the previous ones
     "dockerComposeFile": [
         "../docker-compose.yml",
@@ -16,13 +16,43 @@
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "pip install -r requirements.txt",
+    "postCreateCommand": "pip install poetry && poetry config virtualenvs.in-project true && poetry install",
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-python.python"
+                "ms-python.python",
+                "ms-python.mypy-type-checker",
+                "charliermarsh.ruff"
             ],
+            "settings": {
+                "python.pythonPath": "./.venv/bin/python",
+                "mypy-type-checker.interpreter": [
+                    ".venv/bin/python"
+                ],
+                "mypy-type-checker.args": [
+                    "--config-file=pyproject.toml"
+                ],
+                "python.testing.pytestEnabled": true,
+                "python.testing.pytestPath": ".venv/bin/python",
+                "ruff.interpreter": [
+                    ".venv/bin/python"
+                ],
+                "ruff.lint.args": [
+                    "--config=pyproject.toml"
+                ],
+                "ruff.format.args": [
+                    "--config=pyproject.toml"
+                ],
+                "[python]": {
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.fixAll": "explicit",
+                        "source.organizeImports": "explicit"
+                    },
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                }
+            }
         }
     },
     // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
