@@ -3,7 +3,7 @@ name = "rag-cli"
 version = "0.2.0"
 description = "A project to show good CLI practices with a fully fledged RAG system."
 readme = "README.md"
-license = "GNU GPL"
+license = "GNU General Public License (GPL)"
 keywords = ["CLI", "RAG", "LLM", "vector database", "ollama"]
 authors = ["Oliver Kenyon Wilkins <okwilkins@googlemail.com>"]
 
