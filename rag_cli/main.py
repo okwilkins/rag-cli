@@ -1,6 +1,6 @@
 import sys
-from app.embedder import run_embedder
-from app.vector_store import run_vector_store
+from rag_cli.embedder import run_embedder
+from rag_cli.vector_store import run_vector_store
 from cli import cli, list_of_floats
 
 
