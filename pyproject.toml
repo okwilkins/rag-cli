@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "rag-cli"  # REQUIRED, is the only field that cannot be marked as dynamic.
+version = "0.1.0"  # REQUIRED, although can be dynamic
+description = "A project to show good CLI practices with a fully fledged RAG system."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["CLI", "RAG", "LLM", "vector database", "ollama"]
+authors = [
+  {name = "Oliver Kenyon Wilkins", email = "okwilkins@googlemail.com" }
+]
+maintainers = [
+  {name = "Oliver Kenyon Wilkins", email = "okwilkins@googlemail.com" }
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+dependencies = [
+    "qdrant-client==1.9.*",
+    "ollama==0.1.*"
+]
+
+
+[project.urls]
+"Homepage" = "https://github.com/okwilkins/python-gnu-parallel"
+"Say Thanks!" = "http://okwilkins.dev"
+"Source" = "https://github.com/okwilkins/python-gnu-parallel"
+
+
+[project.scripts]
+sample = "rag_cli.main"
