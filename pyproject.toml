@@ -3,9 +3,12 @@ name = "rag-cli"
 version = "0.2.3"
 description = "A project to show good CLI practices with a fully fledged RAG system."
 readme = "README.md"
-license = "OSI Approved :: GNU Affero General Public License v3"
+license = "GNU GPL v3"
 keywords = ["CLI", "RAG", "LLM", "vector database", "ollama"]
 authors = ["Oliver Kenyon Wilkins <okwilkins@googlemail.com>"]
+classifiers = [
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
