@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="100" src="https://github.com/okwilkins/rag-cli/raw/main/docs/logo.png" alt="RAG CLI">
+  <img height="100" src="https://github.com/okwilkins/rag-cli/raw/main/docs/images/logo.png" alt="RAG CLI">
 </p>
 
 <p align="center">
