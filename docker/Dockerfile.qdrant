@@ -2,7 +2,7 @@ FROM debian:bookworm AS base
 
 # Create user and group
 RUN groupadd -r qdrant && useradd -r -g qdrant qdrant
-RUN mkdir -p /home/qdrant && chown -R qdrant:qdrant /home/qdrant
+RUN mkdir -p /home/qdrant/storage && chown -R qdrant:qdrant /home/qdrant
 
 
 FROM base AS builder

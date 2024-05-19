@@ -18,7 +18,7 @@ services:
       - 6333:6333
     container_name: gnu_parallel_vector_db
     volumes:
-      - qdrant_storage:/qdrant/storage
+      - qdrant_storage:/home/qdrant/storage
 
 volumes:
   models:
