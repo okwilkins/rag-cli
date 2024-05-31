@@ -134,12 +134,13 @@ def cli() -> argparse.Namespace:
         default=0.5,
     )
 
+    # Add optional stdin argument
     rag_parser.add_argument(
-        "query",
-        help="The query to search for.",
+        '--file',
+        nargs='?',
         type=argparse.FileType('r'),
-        nargs="?",
         default=sys.stdin,
+        help='Input file to chat with (default: stdin)'
     )
 
     return parser.parse_args()
