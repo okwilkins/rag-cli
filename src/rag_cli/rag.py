@@ -44,7 +44,7 @@ def run_rag(
     )
     logger.info("Query embedded")
 
-    logger.info("Searching for similar vectors")
+    logger.info(f"Searching for similar vectors with parameters: {collection_name=}, {top_k=}, {min_similarity=}")
     similar_points = qdrant_client.search(
         collection_name=collection_name,
         query_vector=query_embedding["embedding"],
@@ -53,7 +53,7 @@ def run_rag(
         limit=top_k,
     )
 
-    logger.info(f"Similar vectors found: {similar_points}")
+    logger.info(f"Similar vectors found: {len(similar_points)}")
 
     prompt_injection = '\n'.join([
         f"Title: {similar_point.payload['title']}\n{similar_point.payload['extract']}\n"
