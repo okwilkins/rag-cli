@@ -2,8 +2,8 @@ import sys
 
 from rag_cli.cli import cli, list_of_floats
 from rag_cli.embedder import run_embedder
-from rag_cli.vector_store import run_vector_store
 from rag_cli.rag import run_rag
+from rag_cli.vector_store import run_vector_store
 
 
 def main() -> None:
