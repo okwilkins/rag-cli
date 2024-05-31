@@ -31,7 +31,7 @@ pip install rag-cli
 ### Docker
 
 If you don't have a running instance of [Qdrant](https://qdrant.tech/) or [Ollama](https://ollama.com/), you can use the provided docker-compose file to start one.
-  
+
 ```bash
 docker-compose up --build -d
 ```
@@ -90,9 +90,34 @@ rag-cli vector-store \
 --data '{<JSON_DATA>}'
 ```
 
-### End-to-end Pipeline
+### RAG Chat
 
-Here is an example of an end-to-end pipeline. It takes the following steps:
+```bash
+rag-cli rag \
+--ollama-embedding-url http://localhost:11434 \
+--ollama-chat-url http://localhost:11435 \
+--qdrant-url http://localhost:6333 \
+--collection-name nomic-embed-text-v1.5 \
+--top-k 5 \
+--min-similarity 0.5
+--file <INPUT_FILE>
+```
+
+You can alternatively use stdin to pass the text:
+
+```bash
+cat <INPUT_FILE> | \
+--ollama-embedding-url http://localhost:11434 \
+--ollama-chat-url http://localhost:11435 \
+--qdrant-url http://localhost:6333 \
+--collection-name nomic-embed-text-v1.5 \
+--top-k 5 \
+--min-similarity 0.5
+```
+
+### End-to-end Pipeline For Storing Embeddings
+
+Here is an example of an end-to-end pipeline for storing embeddings. It takes the following steps:
 
 - Get a random Wikipedia article
 - Embed the article
@@ -152,12 +177,33 @@ tee data/embeddings/$(basename {1} .txt) 1> /dev/null
 parallel rag-cli vector-store --qdrant-url http://localhost:6333 --collection-name nomic-embed-text-v1.5 2>> output.log ::: $(find data/embeddings/*)
 ```
 
+### Run RAG Chat On A Query
+
+```bash
+echo "Who invented the blue LED?" | \
+rag-cli rag \
+--ollama-embedding-url http://localhost:11434 \
+--ollama-chat-url http://localhost:11435 \
+--qdrant-url http://localhost:6333 \
+--collection-name nomic-embed-text-v1.5 \
+--top-k 5 \
+--min-similarity 0.5 \
+2>> output.log
+```
+
+This example obviously requires that the articles similar to the query have been embedded and stored in Qdrant. You can do this with the example found in the next section.
+
 ### End-to-end Pipeline For A Single Article
 
 ```bash
-curl -L -s "https://en.wikipedia.org/api/rest_v1/page/random/summary" | \
-jq -r ".title, .description, .extract" | \
+wikipedia_data=$(curl -L -s "https://en.wikipedia.org/api/rest_v1/page/summary/Shuji_Nakamura") && \
+payload_data=$(jq "{title: .title, description: .description, extract: .extract}"  <(echo $wikipedia_data)) && \
+text_to_embed=$(jq -r ".title, .description, .extract" <(echo $wikipedia_data)) && \
+echo $text_to_embed | \
 rag-cli embed --ollama-url http://localhost:11434 | \
-jq ".embedding" | \
-rag-cli vector-store --qdrant-url http://localhost:6333 --collection-name nomic-embed-text-v1.5
+jq -r ".embedding" | \
+rag-cli vector-store \
+  --qdrant-url http://localhost:6333 \
+  --collection-name nomic-embed-text-v1.5 \
+  --data "$payload_data"
 ```
