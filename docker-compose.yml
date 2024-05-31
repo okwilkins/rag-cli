@@ -1,12 +1,22 @@
 name: rag_cli
 services:
-  llm_backend:
+  llm_embedding_backend:
     build:
       dockerfile: ./docker/Dockerfile.ollama
-      target: ollama_env
-    container_name: gnu_parallel_ollama
+      target: ollama_embedding
+    container_name: gnu_parallel_ollama_embedding
     ports:
       - 11434:11434
+    volumes:
+      - models:/home/ollama/.ollama/models
+
+  llm_chat_backend:
+    build:
+      dockerfile: ./docker/Dockerfile.ollama
+      target: ollama_chat
+    container_name: gnu_parallel_ollama_chat
+    ports:
+      - 11435:11434
     volumes:
       - models:/home/ollama/.ollama/models
 

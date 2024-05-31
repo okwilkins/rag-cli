@@ -24,11 +24,6 @@ FROM base AS ollama_env
 # Install ca-certificates for pulling models
 RUN apt-get update && apt-get install -y ca-certificates
 
-# Copy the startup script
-# Run this first so that the startup script is cached and run in parallel with the previous steps
-COPY --chown=ollama:ollama ./scripts/ollama_startup.sh /home/ollama/scripts/ollama_startup.sh
-RUN chmod +x /home/ollama/scripts/ollama_startup.sh
-
 ENV OLLAMA_HOST=0.0.0.0
 ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
@@ -43,5 +38,22 @@ RUN mkdir -p /home/ollama/.ollama/models
 
 WORKDIR /home/ollama/
 
+
+FROM ollama_env AS ollama_embedding
+
+# Copy the startup script
+COPY --chown=ollama:ollama ./scripts/ollama_embedding_startup.sh /home/ollama/scripts/ollama_embedding_startup.sh
+RUN chmod +x /home/ollama/scripts/ollama_embedding_startup.sh
+
 EXPOSE 11434
-ENTRYPOINT [ "./scripts/ollama_startup.sh" ] 
+ENTRYPOINT [ "./scripts/ollama_embedding_startup.sh" ] 
+
+
+FROM ollama_env AS ollama_chat
+
+# Copy the startup script
+COPY --chown=ollama:ollama ./scripts/ollama_chat_startup.sh /home/ollama/scripts/ollama_chat_startup.sh
+RUN chmod +x /home/ollama/scripts/ollama_chat_startup.sh
+
+EXPOSE 11434
+ENTRYPOINT [ "./scripts/ollama_chat_startup.sh" ]
