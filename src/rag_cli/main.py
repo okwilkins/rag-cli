@@ -3,6 +3,7 @@ import sys
 from rag_cli.cli import cli, list_of_floats
 from rag_cli.embedder import run_embedder
 from rag_cli.vector_store import run_vector_store
+from rag_cli.rag import run_rag
 
 
 def main() -> None:
@@ -23,6 +24,22 @@ def main() -> None:
             collection_name=args.collection_name,
             embedding=embedding,
             data=args.data,
+        )
+    elif args.command in ["rag"]:
+        # If the file argument is not provided, read from stdin
+        if args.file == sys.stdin:
+            query = sys.stdin.read()
+        else:
+            query = args.file.read()
+        
+        run_rag(
+            ollama_embedding_url=args.ollama_embedding_url,
+            ollama_chat_url=args.ollama_chat_url,
+            qdrant_url=args.qdrant_url,
+            collection_name=args.collection_name,
+            top_k=args.top_k,
+            min_similarity=args.min_similarity,
+            query=query,
         )
 
 
