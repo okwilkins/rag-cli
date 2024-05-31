@@ -55,10 +55,13 @@ def run_rag(
 
     logger.info(f"Similar vectors found: {len(similar_points)}")
 
-    prompt_injection = '\n'.join([
-        f"Title: {similar_point.payload['title']}\n{similar_point.payload['extract']}\n"  # type: ignore
-        for similar_point in similar_points
-    ])
+    similar_points: list[str] = []
+
+    for similar_point in similar_points:
+        if 'title' in similar_point.payload and 'extract' in similar_point.payload:
+            similar_points.append( f"Title: {similar_point.payload['title']}\n{similar_point.payload['extract']}\n")
+    
+    prompt_injection = "\n\n".join(similar_points)
 
     logger.info("Injecting similar points into the prompt and generating the response")
     prompt_intro = (
