@@ -91,4 +91,53 @@ def cli() -> argparse.Namespace:
         default=sys.stdin,
     )
 
+    rag_parser = subparsers.add_parser(
+        "rag",
+        help="Runs the RAG system.",
+    )
+
+    rag_parser.add_argument(
+        "--ollama-embedding-url",
+        help="The URL of the Ollama embedding server.",
+        type=str,
+    )
+
+    rag_parser.add_argument(
+        "--ollama-chat-url",
+        help="The URL of the Ollama chat server.",
+        type=str,
+    )
+
+    rag_parser.add_argument(
+        "--qdrant-url",
+        help="The URL of the Qdrant server.",
+        type=str,
+    )
+
+    rag_parser.add_argument(
+        "--collection-name",
+        help="The name of the collection.",
+        type=str,
+    )
+
+    rag_parser.add_argument(
+        "--top-k",
+        help="The number of similar vectors to return.",
+        type=int,
+        default=5,
+    )
+
+    rag_parser.add_argument(
+        "--min-similarity",
+        help="The minimum similarity to return.",
+        type=float,
+        default=0.5,
+    )
+
+    rag_parser.add_argument(
+        "query",
+        help="The query to search for.",
+        type=str,
+    )
+
     return parser.parse_args()
