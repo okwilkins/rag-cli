@@ -80,17 +80,6 @@ def run_rag(
             }
         ],
     )
-    print(response["message"]["content"])
+    logger.info("Response generated")
 
-
-if __name__ == "__main__":
-    run_rag(
-        ollama_embedding_url="http://localhost:11434",
-        ollama_chat_url="http://localhost:11435",
-        qdrant_url="http://localhost:6333",
-        collection_name="nomic-embed-text-v1.5",
-        top_k=5,
-        min_similarity=0.2,
-        query="What is the deadlift exercise?",
-    )
- 
+    sys.stdout.write(response["message"]["content"])
