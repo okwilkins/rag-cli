@@ -137,7 +137,9 @@ def cli() -> argparse.Namespace:
     rag_parser.add_argument(
         "query",
         help="The query to search for.",
-        type=str,
+        type=argparse.FileType('r'),
+        nargs="?",
+        default=sys.stdin,
     )
 
     return parser.parse_args()
