@@ -28,13 +28,17 @@ def run_embedder(ollama_url: str, text: Optional[str] = None, file: Optional[Tex
     logger.info("Embedding text")
 
     if text is None and file is not None:
-        text = file.read().strip()
+        text_to_use = file.read().strip()
+    elif text is not None and file is None:
+        text_to_use = text
+    else:
+        raise RuntimeError("This should not happen!")
 
     embeddings = client.embeddings(
         model="nomic-embed-text:v1.5",
-        prompt=text,
+        prompt=text_to_use,
     )
-    embeddings["text"] = text
+    embeddings["text"] = text_to_use  # type: ignore
 
     logger.info("Text embedded")
 

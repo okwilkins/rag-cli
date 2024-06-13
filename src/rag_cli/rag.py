@@ -88,4 +88,4 @@ def run_rag(
     )
     logger.info("Response generated")
 
-    sys.stdout.write(response["message"]["content"])
+    sys.stdout.write(response["message"]["content"])  # type: ignore
