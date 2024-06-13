@@ -21,15 +21,14 @@ ruff = ">=0.4.0"
 pytest = ">=8.1.0"
 mypy = ">=1.9.0"
 
+[tool.poetry.scripts]
+rag-cli = "rag_cli.main:main"
+
 
 [project.urls]
 "Homepage" = "https://github.com/okwilkins/python-gnu-parallel"
 "Say Thanks!" = "http://okwilkins.dev"
 "Source" = "https://github.com/okwilkins/python-gnu-parallel"
-
-
-[project.scripts]
-rag-cli = "rag_cli.main:main"
 
 
 [tool.ruff]
