@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rag-cli"
-version = "0.2.5"
+version = "0.2.6"
 description = "A project to show good CLI practices with a fully fledged RAG system."
 readme = "README.md"
 license = "GNU GPL v3"
